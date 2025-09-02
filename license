@@ -1,0 +1,34 @@
+
+---
+
+### .gitignore
+```gitignore
+# Node / dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Build artifacts & coverage
+dist/
+build/
+coverage/
+.cache/
+
+# Env / local config
+.env
+.env.*
+*.local
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Backend runtime data
+backend/data/findings.db
+backend/data/findings.db-journal
+backend/data/uploads/
+!backend/data/uploads/.gitkeep
