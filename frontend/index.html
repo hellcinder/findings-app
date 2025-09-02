@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Findings Form</title>
+<style>
+  :root { --bg:#f7f7fb; --fg:#1a1a1a; --muted:#6b7280; --card:#fff; --line:#e5e7eb; --accent:#2563eb; }
+  body { margin:0; font:16px/1.45 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; color:var(--fg); background:var(--bg); }
+  .wrap { max-width:900px; margin:40px auto; padding:0 16px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:14px; box-shadow:0 4px 16px rgba(0,0,0,.04); }
+  header { padding:20px 24px; border-bottom:1px solid var(--line); }
+  header h1 { margin:0; font-size:20px; }
+  form { padding:20px 24px; display:grid; gap:16px; }
+  fieldset { border:1px solid var(--line); border-radius:12px; padding:16px; }
+  legend { padding:0 8px; font-weight:600; color:var(--muted); }
+  .grid { display:grid; gap:12px; }
+  .grid.cols-2 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .grid.cols-3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
+  label { display:block; font-weight:600; margin-bottom:6px; }
+  input[type="text"], input[type="email"], input[type="date"], input[type="url"], select, textarea {
+    width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:10px; background:#fff;
+  }
+  textarea { min-height:110px; resize:vertical; }
+  .hint { font-size:12px; color:var(--muted); }
+  .row { display:flex; gap:12px; align-items:center; }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; }
+  .chip { background:#eef2ff; border:1px solid #dbeafe; padding:4px 8px; border-radius:999px; font-size:12px; }
+  .actions { display:flex; gap:10px; justify-content:flex-end; padding:0 24px 24px; }
+  button { padding:10px 14px; border:1px solid var(--line); border-radius:10px; background:#fff; cursor:pointer; }
+  button.primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .req::after { content:" *"; color:#ef4444; }
+  .sev-low { color:#166534; }
+  .sev-med { color:#92400e; }
+  .sev-high { color:#b91c1c; }
+  .sev-crit { color:#7c2d12; font-weight:700; }
+  .list-card { background:#fff; border:1px solid var(--line); border-radius:12px; padding:16px; margin:16px 0; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <header>
+        <h1>Findings Form</h1>
+        <div class="hint">Log a bug, audit issue, UX finding, or compliance observation.</div>
+      </header>
+      <form id="findingsForm" novalidate>
+        <fieldset>
+          <legend>Summary</legend>
+          <div class="grid cols-2">
+            <div>
+              <label for="title" class="req">Title</label>
+              <input id="title" name="title" type="text" placeholder="Short, clear summary" required />
+            </div>
+            <div>
+              <label for="date" class="req">Date</label>
+              <input id="date" name="date" type="date" required />
+            </div>
+          </div>
+          <div class="grid cols-3">
+            <div>
+              <label for="type" class="req">Type</label>
+              <select id="type" name="type" required>
+                <option value="">Select type…</option>
+                <option>Bug</option>
+                <option>UX</option>
+                <option>Content</option>
+                <option>Performance</option>
+                <option>Security</option>
+                <option>Data Quality</option>
+                <option>Compliance</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div>
+              <label for="severity" class="req">Severity</label>
+              <select id="severity" name="severity" required>
+                <option value="">Select severity…</option>
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+                <option value="Critical">Critical</option>
+              </select>
+              <div id="sevBadge" class="hint">Pick impact level.</div>
+            </div>
+            <div>
+              <label for="priority">Priority</label>
+              <select id="priority" name="priority">
+                <option value="">Unset</option>
+                <option>P3 – Low</option>
+                <option>P2 – Normal</option>
+                <option>P1 – High</option>
+                <option>P0 – Urgent</option>
+              </select>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Context</legend>
+          <div class="grid cols-3">
+            <div>
+              <label for="environment" class="req">Environment</label>
+              <select id="environment" name="environment" required>
+                <option value="">Select environment…</option>
+                <option>Production</option>
+                <option>Staging</option>
+                <option>Development</option>
+                <option>Test</option>
+              </select>
+            </div>
+            <div>
+              <label for="area" class="req">Area / Component</label>
+              <input id="area" name="area" type="text" placeholder="e.g., Checkout, API /auth, iOS app" required />
+            </div>
+            <div>
+              <label for="reporter" class="req">Reporter Email</label>
+              <input id="reporter" name="reporter" type="email" placeholder="you@example.com" required />
+            </div>
+          </div>
+          <div>
+            <label for="version">Version / Build</label>
+            <input id="version" name="version" type="text" placeholder="e.g., v2.18.3 (build 8721)" />
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Details</legend>
+          <div class="grid cols-2">
+            <div>
+              <label for="expected" class="req">Expected Result</label>
+              <textarea id="expected" name="expected" placeholder="What should happen?" required></textarea>
+            </div>
+            <div>
+              <label for="actual" class="req">Actual Result</label>
+              <textarea id="actual" name="actual" placeholder="What actually happens?" required></textarea>
+            </div>
+          </div>
+          <div>
+            <label for="steps" class="req">Steps to Reproduce / Observation</label>
+            <textarea id="steps" name="steps" placeholder="1) … 2) … 3) …" required></textarea>
+            <div class="hint">Be specific—include URLs, user roles, inputs, and timing.</div>
+          </div>
+          <div class="grid cols-2">
+            <div>
+              <label for="evidenceUrl">Evidence URL</label>
+              <input id="evidenceUrl" name="evidenceUrl" type="url" placeholder="Link to screenshot, video, log, or dashboard" />
+            </div>
+            <div>
+              <label for="attachment">Attach File</label>
+              <input id="attachment" name="attachment" type="file" />
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Classification</legend>
+          <div class="grid cols-3">
+            <div>
+              <label for="status" class="req">Status</label>
+              <select id="status" name="status" required>
+                <option value="">Select status…</option>
+                <option>Open</option>
+                <option>In Review</option>
+                <option>In Progress</option>
+                <option>Blocked</option>
+                <option>Resolved</option>
+                <option>Won’t Fix</option>
+              </select>
+            </div>
+            <div>
+              <label for="assignee">Assignee</label>
+              <input id="assignee" name="assignee" type="text" placeholder="Name or team" />
+            </div>
+            <div>
+              <label for="tags">Tags (comma-separated)</label>
+              <input id="tags" name="tags" type="text" placeholder="e.g., payments, ios, regression" />
+              <div id="tagsPreview" class="chips" aria-live="polite"></div>
+            </div>
+          </div>
+        </fieldset>
+
+        <div class="row">
+          <input id="consent" name="consent" type="checkbox" required />
+          <label for="consent" class="req">I confirm this information is accurate to the best of my knowledge.</label>
+        </div>
+
+        <div class="actions">
+          <button type="button" id="saveDraft">Save Draft</button>
+          <button type="reset">Reset</button>
+          <button class="primary" type="submit">Submit Finding</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <section class="wrap card" style="margin-top:16px;">
+    <header><h1>Recent Findings</h1></header>
+    <div id="recent" style="padding:20px 24px;"></div>
+  </section>
+
+<script>
+  // Prefill date with today
+  (function initDate(){
+    const d = document.getElementById('date');
+    if (d && !d.value) {
+      const today = new Date();
+      const iso = today.toISOString().slice(0,10);
+      d.value = iso;
+    }
+  })();
+
+  // Severity badge helper
+  const sev = document.getElementById('severity');
+  const sevBadge = document.getElementById('sevBadge');
+  const sevClasses = ['sev-low','sev-med','sev-high','sev-crit'];
+  sev?.addEventListener('change', () => {
+    sevBadge.classList.remove(...sevClasses);
+    const v = sev.value;
+    if (v === 'Low') sevBadge.classList.add('sev-low'), sevBadge.textContent = 'Low impact';
+    else if (v === 'Medium') sevBadge.classList.add('sev-med'), sevBadge.textContent = 'Moderate impact';
+    else if (v === 'High') sevBadge.classList.add('sev-high'), sevBadge.textContent = 'High impact';
+    else if (v === 'Critical') sevBadge.classList.add('sev-crit'), sevBadge.textContent = 'Critical—immediate attention required';
+    else sevBadge.textContent = 'Pick impact level.';
+  });
+
+  // Tags preview as chips
+  const form = document.getElementById('findingsForm');
+  const tagsInput = document.getElementById('tags');
+  const tagsPreview = document.getElementById('tagsPreview');
+  function renderTags() {
+    if (!tagsPreview) return;
+    tagsPreview.innerHTML = '';
+    const tags = (tagsInput.value || '')
+      .split(',')
+      .map(t => t.trim())
+      .filter(Boolean);
+    tags.forEach(t => {
+      const span = document.createElement('span');
+      span.className = 'chip';
+      span.textContent = t;
+      tagsPreview.appendChild(span);
+    });
+  }
+  tagsInput?.addEventListener('input', renderTags);
+
+  // Save/load draft (localStorage)
+  const DRAFT_KEY = 'findingsFormDraft.v1';
+
+  function saveDraft() {
+    const fd = new FormData(form);
+    const obj = {};
+    fd.forEach((v, k) => { obj[k] = v; });
+    // attachment cannot be stored; omit File objects
+    delete obj.attachment;
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(obj));
+    alert('Draft saved locally.');
+  }
+  function loadDraft() {
+    const raw = localStorage.getItem(DRAFT_KEY);
+    if (!raw) return;
+    try {
+      const obj = JSON.parse(raw);
+      Object.entries(obj).forEach(([k, v]) => {
+        const el = form.elements[k];
+        if (!el) return;
+        if (el.type === 'checkbox') el.checked = !!v;
+        else el.value = v;
+      });
+      renderTags();
+      sev.dispatchEvent(new Event('change'));
+    } catch {}
+  }
+  document.getElementById('saveDraft')?.addEventListener('click', saveDraft);
+  window.addEventListener('DOMContentLoaded', () => {
+    loadDraft();
+    loadRecent();
+  });
+
+  // Submit to backend
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
+    try {
+      const fd = new FormData(form); // includes file
+      const res = await fetch('http://localhost:3000/api/findings', {
+        method: 'POST',
+        body: fd
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(()=>({}));
+        throw new Error(err.error || `Request failed: ${res.status}`);
+      }
+
+      const data = await res.json();
+      alert(`Finding submitted! ID: ${data.id}`);
+      form.reset();
+      renderTags();
+      document.getElementById('sevBadge').textContent = 'Pick impact level.';
+      loadRecent();
+    } catch (err) {
+      console.error(err);
+      alert(`Submission failed: ${err.message}`);
+    }
+  });
+
+  // Recent list viewer
+  async function loadRecent() {
+    const el = document.getElementById('recent');
+    el.innerHTML = '<div class="hint">Loading…</div>';
+    try {
+      const res = await fetch('http://localhost:3000/api/findings?limit=20');
+      const items = await res.json();
+      el.innerHTML = items.map(i => `
+        <div class="list-card">
+          <div style="font-weight:600">${i.title}</div>
+          <div class="hint">
+            ID: ${i.id} · ${new Date(i.created_at).toLocaleString()} · ${i.severity} · ${i.status}
+            ${i.assignee ? ' · ' + i.assignee : ''}
+          </div>
+          <div class="chips" style="margin-top:6px;">
+            ${(i.tags || '').split(',').map(t=>t.trim()).filter(Boolean).map(t=>`<span class="chip">${t}</span>`).join('')}
+          </div>
+        </div>
+      `).join('') || '<div class="hint">No findings yet.</div>';
+    } catch (e) {
+      console.error(e);
+      el.innerHTML = '<div class="hint">Failed to load findings.</div>';
+    }
+  }
+</script>
+</body>
+</html>
